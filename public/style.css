@@ -1,0 +1,12 @@
+body img.exercise {
+  max-height: 100%;
+  max-width: 100%; }
+body .trainer {
+  float: right;
+  text-align: center; }
+body .interset_break {
+  color: green; }
+body .break {
+  color: green; }
+body .exercise {
+  color: red; }
