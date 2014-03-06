@@ -16,12 +16,32 @@ $ ->
         'Bicycle Crunches',
         'Leg Raises',
         'Knee Pull-ins',
-        'Push-ups' ]
+        'Push-ups'
+      ]
+    },
+    {
+      name: 'Abs On Fire'
+      each_time: 1             # Minutes of each exercise
+      each_break: 1            # Time between exercise
+      sets_per_level: [ 3, 5, 8 ] # Number of sets at level 1, 2, 3
+      between_sets: 1          # Minutes between each set
+      exercises: [
+        'Windshield Wipers',
+        'Long Arm Crunches',
+        'Reverse Crunches',
+        'Bicycle Crunches',
+        'Modified V-sits',
+        'Heel Touches',
+      ]
     }
   ]
 
   level = 0
-  workout = workouts.pop()
+  workout_id = parseInt(window.location.hash.split('/').pop(), 10)
+  workout = workouts[workout_id - 1]
+
+  # Image file one is a title card, so we need to get the next image
+  $('img.exercise').attr("src","assets/images/#{workout_id + 1}.jpg")
 
   $('.title').append($('<h1>')
     .attr('class', 'name')

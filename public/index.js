@@ -1,6 +1,6 @@
 (function() {
   $(function() {
-    var breaks, exercises, interset_breaks, level, minutes, schedule, set, sets, timer, workout, workouts;
+    var breaks, exercises, interset_breaks, level, minutes, schedule, set, sets, timer, workout, workout_id, workouts;
     workouts = [
       {
         name: '1&1 Workout',
@@ -9,10 +9,19 @@
         sets_per_level: [3, 4, 6],
         between_sets: 3,
         exercises: ['High Knees', 'Jumping Jacks', 'Squats', 'Lunges', 'Plank Leg raises', 'Climbers', 'Bicycle Crunches', 'Leg Raises', 'Knee Pull-ins', 'Push-ups']
+      }, {
+        name: 'Abs On Fire',
+        each_time: 1,
+        each_break: 1,
+        sets_per_level: [3, 5, 8],
+        between_sets: 1,
+        exercises: ['Windshield Wipers', 'Long Arm Crunches', 'Reverse Crunches', 'Bicycle Crunches', 'Modified V-sits', 'Heel Touches']
       }
     ];
     level = 0;
-    workout = workouts.pop();
+    workout_id = parseInt(window.location.hash.split('/').pop(), 10);
+    workout = workouts[workout_id - 1];
+    $('img.exercise').attr("src", "assets/images/" + (workout_id + 1) + ".jpg");
     $('.title').append($('<h1>').attr('class', 'name').text(workout.name));
     exercises = _(workout.exercises).map(function(exercise) {
       return {
