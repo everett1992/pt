@@ -19,7 +19,7 @@
       }
     ];
     level = 0;
-    workout_id = parseInt(window.location.hash.split('/').pop(), 10);
+    workout_id = parseInt(window.location.hash.split('/').pop(), 10) || 1;
     workout = workouts[workout_id - 1];
     $('img.exercise').attr("src", "assets/images/" + (workout_id + 1) + ".jpg");
     $('.title').append($('<h1>').attr('class', 'name').text(workout.name));

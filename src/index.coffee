@@ -37,7 +37,7 @@ $ ->
   ]
 
   level = 0
-  workout_id = parseInt(window.location.hash.split('/').pop(), 10)
+  workout_id = parseInt(window.location.hash.split('/').pop(), 10) || 1
   workout = workouts[workout_id - 1]
 
   # Image file one is a title card, so we need to get the next image
