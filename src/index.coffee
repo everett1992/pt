@@ -85,7 +85,10 @@ $ ->
     end = Date.now() + ms
     update_time = ->
       $('.timer').html $('<h3>').text("#{(end - Date.now()) / 1000} seconds left")
-      setTimeout(update_time, 50) if Date.now() <= end
+      if Date.now() <= end
+        setTimeout(update_time, 50)
+      else
+        $('.timer').empty()
 
     update_time()
 

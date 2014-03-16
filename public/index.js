@@ -75,6 +75,8 @@
         $('.timer').html($('<h3>').text("" + ((end - Date.now()) / 1000) + " seconds left"));
         if (Date.now() <= end) {
           return setTimeout(update_time, 50);
+        } else {
+          return $('.timer').empty();
         }
       };
       return update_time();
