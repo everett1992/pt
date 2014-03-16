@@ -1,4 +1,8 @@
 $ ->
+  $(document).on 'keypress', (a,b,c) ->
+    if a.which == 32 || a.which == 13
+      $('#next').click()
+
   workouts = [
     {
       name: '1&1 Workout'
@@ -21,8 +25,7 @@ $ ->
     },
     {
       name: 'Abs On Fire'
-      each_time: 1             # Minutes of each exercise
-      each_break: 1            # Time between exercise
+      each_reps: 10
       sets_per_level: [ 3, 5, 8 ] # Number of sets at level 1, 2, 3
       between_sets: 1          # Minutes between each set
       exercises: [
@@ -50,13 +53,21 @@ $ ->
 
 
   exercises = _(workout.exercises).map (exercise) ->
-    { class: 'exercise', title: exercise, time: workout.each_time }
+    if workout.each_time
+      { class: 'exercise', title: exercise, time: workout.each_time }
+    else
+      { class: 'exercise', title: exercise, reps: workout.each_reps }
 
-  breaks = _(exercises).map (exercise) ->
-    { class: 'break', title: 'Break', time: workout.each_break }
 
-  # Set of exercises alternating with breaks.
-  set = _.initial(_.flatten(_.zip(exercises, breaks)))
+  if workout.each_break
+    breaks = _(exercises).map (exercise) ->
+        { class: 'break', title: 'Break', time: workout.each_break }
+
+    # Set of exercises alternating with breaks.
+    set = _.initial(_.flatten(_.zip(exercises, breaks)))
+  else
+    set = exercises
+
 
   # An array of n sets where n is the number of sets at the current level
   sets = _(workout.sets_per_level[0]).times -> set
@@ -65,31 +76,43 @@ $ ->
     { class: 'inter_set_break', title: 'Inter Set Break', time: workout.between_sets}
 
   workout = _.initial(_.flatten(_.zip(sets, interset_breaks))).reverse()
-  console.log _(workout).map (w) ->
-    w.title
 
-  # Minutes to miliseconds
+  # Returns minutes to miliseconds
   minutes = (min) -> min * 1000 * 60
 
-  timer = (duration) ->
-    end = Date.now() + duration
+  # Adds a countdown timer starting at ms miliseconds
+  timer = (ms) ->
+    end = Date.now() + ms
     update_time = ->
       $('.timer').html $('<h3>').text("#{(end - Date.now()) / 1000} seconds left")
       setTimeout(update_time, 50) if Date.now() <= end
 
     update_time()
 
-  schedule = (list) ->
+  # Starts the next exercise
+  next = (list) ->
     item = list.pop()
-    console.log(item.title)
+    window.next = _.bind(next, this, list)
 
-    $('.activity').html($('<h1>')
-      .attr('class',item.class)
-      .text(item.title)
-    )
+    if item.time
 
-    timer(minutes(item.time))
-    setTimeout(_.bind(schedule, this, list), minutes(item.time))
+      $('.activity').html($('<h1>')
+        .attr('class',item.class)
+        .text(item.title)
+      )
 
-  schedule(workout)
+      timer(minutes(item.time))
+      setTimeout(window.next, minutes(item.time))
+    else if item.reps
+      $('.activity').html($('<h1>')
+        .attr('class',item.class)
+        .text("#{item.title} x #{item.reps}")
+      )
+      $('.activity').append($('<button>')
+        .attr('id', 'next')
+        .text('Next')
+        .click(window.next)
+      )
+
+  next(workout)
 
